@@ -6,17 +6,28 @@ class mono {
   $mono_version = 'mono-3.10.0'
 
   $prerequisite_packages = [
-    "gcc",
-    "gcc-c++",
-    "libtool",
-    "bison",
-    "autoconf",
-    "automake",
+  'gcc',
+  'gcc-c++',
+  'bison',
+  'pkgconfig',
+  'glib2-devel',
+  'gettext',
+  'make',
+  'freetype-devel',
+  'fontconfig-devel',
+  'libXft-devel',
+  'libpng-devel',
+  'libjpeg-devel',
+  'libtiff-devel',
+  'giflib-devel',
+  'ghostscript-devel',
+  'libexif-devel',
   ]
 
   package { $prerequisite_packages:
     ensure   => installed,
     provider => yum,
+    before  => Exec['extract_mono_pkg'],
   }
 
   package { 'gettext':
@@ -28,6 +39,8 @@ class mono {
     cwd     => '/usr/src',
     path    => "/usr/sbin:/usr/bin:/sbin:/bin",
     require => Package['gettext'],
+    refreshonly => true,
+    require => Package[$prerequisite_packages],
   }
 
   exec{ 'extract_mono_pkg':
