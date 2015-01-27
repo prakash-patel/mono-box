@@ -12,14 +12,21 @@ You have to install below software in order to run this code.
 1. Install [Puppet][]
 1. Install [VirtualBox][]
 
+## version
+
+1. mono (3.12.0)
+1. libgdiplus (3.12)
+1. mod mono (3.12)
+1. xsp (2.10)
+
 ## How to start
 
 ### See it in action
 
-Run below command 
+Run below command at root lavel
 $ vagrant up ( It will take around 25 minute, do not watch porn.. lol )
 
-Once above command run successfully, go to your browser and write 'localhost:8080'. You able to see default website.
+Once above command run successfully, go to your browser and write 'http://localhost:8080'. You able to see default website that provided by xsp.
 
 #### Website ( TODO)
 1. Publish c# code locally
