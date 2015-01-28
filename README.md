@@ -19,7 +19,7 @@ You have to install below software in order to run this code.
 1. mod mono (3.12)
 1. xsp (2.10)
 
-Unless if you want to change this version please go to [mono soruce][] to get different version. Apply that version to each `.pp` file.
+Unless if you want to change this version please go to [mono source][] to get different version. Apply that version to each `.pp` file.
 
 ## How to start
 
