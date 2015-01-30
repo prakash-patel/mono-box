@@ -1,25 +1,46 @@
 #== Class: profile/mono
 
-class profile::mono {
+class profile::mono(
+  $mono_version = ''
+)inherits profile {
 
-  $version = '3.12.0'
+  $prerequisite_packages = [
+    'gcc',
+    'gcc-c++',
+    'bison',
+    'pkgconfig',
+    'glib2-devel',
+    'gettext',
+    'make',
+    'freetype-devel',
+    'fontconfig-devel',
+    'libXft-devel',
+    'libpng-devel',
+    'libjpeg-devel',
+    'libtiff-devel',
+    'giflib-devel',
+    'ghostscript-devel',
+    'libexif-devel',
+    'httpd-devel',
+    'cairo-devel',
+  ]
 
-  exec { 'prerequisite_packages':
-    command => 'yum -y install gcc gcc-c++ bison pkgconfig httpd glib2-devel gettext make freetype-devel fontconfig-devel libXft-devel libpng-devel libjpeg-devel libtiff-devel giflib-devel ghostscript-devel libexif-devel httpd-devel cairo-devel',
-    path    => "/usr/sbin:/usr/bin:/sbin:/bin",
-    timeout => 0,
+  package { $prerequisite_packages:
+    ensure   => installed,
+    provider => yum,
+    before  => Exec['extract_mono_pkg'],
   }
 
   exec{'retrieve_mono_pkg':
-    command => "wget http://download.mono-project.com/sources/mono/mono-${version}.tar.bz2",
+    command => "wget http://download.mono-project.com/sources/mono/mono-${mono_version}.tar.bz2",
     cwd     => '/usr/src',
     path    => "/usr/sbin:/usr/bin:/sbin:/bin",
-    require => Exec['prerequisite_packages'],
-    unless  => "ls /usr/src/mono-${version}.tar.bz2",
+    require => Package[$prerequisite_packages],
+    unless  => "ls /usr/src/mono-${mono_version}.tar.bz2",
   }
 
   exec{ 'extract_mono_pkg':
-    command     => "tar -xvjf mono-${version}.tar.bz2",
+    command     => "tar -xvjf mono-${mono_version}.tar.bz2",
     cwd         => '/usr/src',
     subscribe   => Exec['retrieve_mono_pkg'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
@@ -28,8 +49,8 @@ class profile::mono {
   }
 
   exec{'configure_mono':
-    command     => "/usr/src/mono-${version}/./configure --prefix=/usr",
-    cwd         => "/usr/src/mono-${version}",
+    command     => "/usr/src/mono-${mono_version}/./configure --prefix=/usr",
+    cwd         => "/usr/src/mono-${mono_version}",
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     subscribe   => Exec['extract_mono_pkg'],
     timeout     => 0,
@@ -39,7 +60,7 @@ class profile::mono {
 
   exec{'make_mono':
     command     => "make",
-    cwd         => "/usr/src/mono-${version}",
+    cwd         => "/usr/src/mono-${mono_version}",
     subscribe   => Exec['configure_mono'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     timeout     => 0,
@@ -49,7 +70,7 @@ class profile::mono {
 
   exec{'install_mono':
     command     => "make install",
-    cwd         => "/usr/src/mono-${version}",
+    cwd         => "/usr/src/mono-${mono_version}",
     subscribe   => Exec['make_mono'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     timeout     => 0,

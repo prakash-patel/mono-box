@@ -44,6 +44,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder '.', '/vagrant_data'
   config.vm.synced_folder '../puppet/profile', '/etc/puppet/modules/profile'
   config.vm.synced_folder '../puppet/role', '/etc/puppet/modules/role'
+  config.vm.synced_folder '../puppet/hiera', '/etc/puppet/hiera'
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -69,8 +70,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   # cf.run_file = "motd.cf"
   # end
   #
-  # You can also configure and bootstrap a client to an existing
-  # policy server:
   #
   # config.vm.provision "cfengine" do |cf|
   #   cf.policy_server_address = "10.0.2.15"
@@ -90,12 +89,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     '[[ -d /etc/puppet/modules/apache ]] || sudo puppet module install puppetlabs-apache --version 1.2.0;'
   end
 
-  config.vm.provision "puppet" do |puppet|
+  config.vm.provision 'puppet' do |puppet|
     puppet.options = [
       '--hiera_config=/etc/puppet/hiera/hiera.yaml',
     ]
      puppet.manifests_path = ".vagrant/manifests"
      puppet.manifest_file  = "default.pp"
+  end
+
+  # You can also configure and bootstrap a client to an existing
+  # policy server:
+  config.vm.provision "bootstrap" , type: "shell" do |bootstrap|
+    bootstrap.inline =
+      'sudo service httpd stop >/dev/null 2>&1;'+
+      'sudo service httpd start'
   end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
