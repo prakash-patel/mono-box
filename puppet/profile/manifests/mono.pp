@@ -37,6 +37,7 @@ class profile::mono(
     path    => "/usr/sbin:/usr/bin:/sbin:/bin",
     require => Package[$prerequisite_packages],
     unless  => "ls /usr/src/mono-${mono_version}.tar.bz2",
+    timeout => 0,
   }
 
   exec{ 'extract_mono_pkg':
@@ -46,6 +47,7 @@ class profile::mono(
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     refreshonly => true,
     user        => 'root',
+    timeout     => 0,
   }
 
   exec{'configure_mono':

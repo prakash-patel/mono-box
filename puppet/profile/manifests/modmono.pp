@@ -60,4 +60,23 @@ class profile::modmono(
     user        => 'root',
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
   }
+
+  # create .net framwork 4.5 mod_mono_server
+  file{ '/usr/bin/mod-mono-server4.5' :
+    content => "#!bin/bash\n exec /usr/bin/mono \$MONO_OPTIONS \"/usr/lib/mono/4.5/mod-mono-server4.exe\" \"$@\" " ,
+    group   => 'root',
+    mode    => '0755',
+    require => Exec['install_mod_mono'],
+  }
+
+  # copy mod_mono_server4 from .net 4.0 to 4.5
+  file{ '/usr/lib/mono/4.5/mod-mono-server4.exe' :
+    ensure  => present,
+    mode    => '0755',
+    owner   => 'root',
+    group   => 'root',
+    source  => "/usr/lib/mono/4.0/mod-mono-server4.exe",
+    require => Exec['install_mod_mono'],
+  }
+
 }

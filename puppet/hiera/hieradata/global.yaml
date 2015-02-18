@@ -1,5 +1,5 @@
 ---
 
-profile::http::doc_root: '/usr/src/xsp-2.10/test'
-profile::http::dot_net_framework: '2'
+profile::http::doc_root: '/vagrant_data/monoapp'
+profile::http::dot_net_framework: '4.5'
 profile::http::mono_port: '80'
