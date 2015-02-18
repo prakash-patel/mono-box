@@ -1,3 +1,6 @@
 /.vagrant/.bundle
 /.vagrant/machines
 /bin
+
+#require dll for run asp.net mvc 4 application
+!monoapp/bin

@@ -19,6 +19,15 @@ class profile::http(
     default_vhost => false,
   }
 
+  class { 'hosts':
+    host_entries => {
+      "vagrant-hbase.icadev.local" => {
+        'host_aliases' => ["vagrant-hbase"],
+        'ip'           => "192.168.56.120",
+      },
+    }
+  }
+
   apache::vhost { 'mono':
     servername => 'localhost',
     port    => $mono_port,
@@ -26,6 +35,7 @@ class profile::http(
     additional_includes => '/etc/httpd/conf/mod_mono.conf',
     serveradmin => 'web-admin@vagrant-mono.local',
     custom_fragment => "
+    MonoDebug vagrant-mono.local true
     MonoServerPath vagrant-mono.local \"/usr/bin/mod-mono-server${dot_net_framework}\"
     MonoSetEnv vagrant-mono.local MONO_IOMAP=all
     MonoApplications vagrant-mono.local \"/:${doc_root}\"
