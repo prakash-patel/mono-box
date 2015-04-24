@@ -26,7 +26,7 @@ Unless if you want to change this version please go to [mono source][] to get di
 ### See it in action
 
 Run below command at root lavel
-$ vagrant up ( It will take around 25 minute, do not watch porn.. lol )
+$ vagrant up (It will take around 25 minute to start virtual machine)
 
 Once above command run successfully, go to your browser and write 'http://localhost:8080'. You able to see default website that provided by xsp.
 
