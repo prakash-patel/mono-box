@@ -1,5 +1,0 @@
----
-profile::mono_ext: 'tar.bz2'
-profile::xsp_ext: 'tar.bz2'
-profile::libgdipuls_ext: 'tar.gz'
-profile::mod_mono_ext: 'tar.gz'
