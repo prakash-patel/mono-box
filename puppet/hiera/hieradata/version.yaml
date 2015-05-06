@@ -1,6 +1,11 @@
 ---
 
-profile::mono::mono_version: '3.12.0'
-profile::libgdiplus::libgdiplus_version: '3.12'
-profile::xsp::xsp_version: '2.10'
-profile::modmono::mod_mono_version: '3.12'
+profile::mono::mono_version: 'mono-3.12.1'
+profile::libgdiplus::libgdiplus_version: 'libgdiplus-3.12'
+profile::xsp::xsp_version: 'xsp-2.10'
+profile::modmono::mod_mono_version: 'mod_mono-3.12'
+
+profile::mono::mono_extension: 'tar.bz2'
+profile::libgdiplus::libgdipuls_extension: 'tar.gz'
+profile::xsp::xsp_extension: 'tar.bz2'
+profile::modmono::mod_mono_extension: 'tar.gz'

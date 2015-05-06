@@ -1,8 +1,10 @@
 #== Class: profile/mono
 
 class profile::mono(
-  $mono_version = ''
+  $mono_version = '',
+  $mono_extension = ''
 )inherits profile {
+
 
   $prerequisite_packages = [
     'gcc',
@@ -32,16 +34,16 @@ class profile::mono(
   }
 
   exec{'retrieve_mono_pkg':
-    command => "wget http://download.mono-project.com/sources/mono/mono-${mono_version}.tar.bz2",
+    command => "wget http://download.mono-project.com/sources/mono/${mono_version}.${mono_extension}",
     cwd     => '/usr/src',
     path    => "/usr/sbin:/usr/bin:/sbin:/bin",
     require => Package[$prerequisite_packages],
-    unless  => "ls /usr/src/mono-${mono_version}.tar.bz2",
+    unless  => "ls /usr/src/${mono_version}.${mono_extension}",
     timeout => 0,
   }
 
   exec{ 'extract_mono_pkg':
-    command     => "tar -xvjf mono-${mono_version}.tar.bz2",
+    command     => "tar -xvjf ${mono_version}.${mono_extension}",
     cwd         => '/usr/src',
     subscribe   => Exec['retrieve_mono_pkg'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
@@ -51,8 +53,8 @@ class profile::mono(
   }
 
   exec{'configure_mono':
-    command     => "/usr/src/mono-${mono_version}/./configure --prefix=/usr",
-    cwd         => "/usr/src/mono-${mono_version}",
+    command     => "/usr/src/${mono_version}/./configure --prefix=/usr",
+    cwd         => "/usr/src/${mono_version}",
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     subscribe   => Exec['extract_mono_pkg'],
     timeout     => 0,
@@ -62,7 +64,7 @@ class profile::mono(
 
   exec{'make_mono':
     command     => "make",
-    cwd         => "/usr/src/mono-${mono_version}",
+    cwd         => "/usr/src/${mono_version}",
     subscribe   => Exec['configure_mono'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     timeout     => 0,
@@ -72,7 +74,7 @@ class profile::mono(
 
   exec{'install_mono':
     command     => "make install",
-    cwd         => "/usr/src/mono-${mono_version}",
+    cwd         => "/usr/src/${mono_version}",
     subscribe   => Exec['make_mono'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     timeout     => 0,

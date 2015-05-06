@@ -1,18 +1,19 @@
 # == Class: profile/mod_mono
 class profile::modmono(
-  $mod_mono_version = ''
+  $mod_mono_version = '',
+  $mod_mono_extension = ''
 )inherits profile {
 
   exec{'retrieve_mod_mono_pkg':
-    command => "wget http://origin-download.mono-project.com/sources/mod_mono/mod_mono-${mod_mono_version}.tar.gz",
+    command => "wget http://origin-download.mono-project.com/sources/mod_mono/${mod_mono_version}.${mod_mono_extension}",
     cwd     => '/usr/src',
     path    => "/usr/sbin:/usr/bin:/sbin:/bin",
     require => Class['profile::xsp'],
-    unless  => "ls /usr/src/mod_mono-${mod_mono_version}.tar.gz",
+    unless  => "ls /usr/src/${mod_mono_version}.${mod_mono_extension}",
   }
 
   exec{ 'extract_mod_mono_pkg':
-    command     => "tar -xvzf mod_mono-${mod_mono_version}.tar.gz",
+    command     => "tar -xvzf ${mod_mono_version}.${mod_mono_extension}",
     cwd         => '/usr/src',
     subscribe   => Exec['retrieve_mod_mono_pkg'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
@@ -21,8 +22,8 @@ class profile::modmono(
   }
 
   exec{'configure_mod_mono':
-    command     => "/usr/src/mod_mono-${mod_mono_version}/./configure --prefix=/usr",
-    cwd         => "/usr/src/mod_mono-${mod_mono_version}",
+    command     => "/usr/src/${mod_mono_version}/./configure --prefix=/usr",
+    cwd         => "/usr/src/${mod_mono_version}",
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     subscribe   => Exec['extract_mod_mono_pkg'],
     user        => 'root',
@@ -33,7 +34,7 @@ class profile::modmono(
 
   exec{'make_mod_mono':
     command     => "su -c 'make'",
-    cwd         => "/usr/src/mod_mono-${mod_mono_version}",
+    cwd         => "/usr/src/${mod_mono_version}",
     subscribe   => Exec['configure_mod_mono'],
     user        => 'root',
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
@@ -44,7 +45,7 @@ class profile::modmono(
 
   exec{'install_mod_mono':
     command     => "su -c 'make install'",
-    cwd         => "/usr/src/mod_mono-${mod_mono_version}",
+    cwd         => "/usr/src/${mod_mono_version}",
     subscribe   => Exec['make_mod_mono'],
     path        => "/usr/sbin:/usr/bin:/sbin:/bin",
     user        => 'root',
@@ -78,5 +79,4 @@ class profile::modmono(
     source  => "/usr/lib/mono/4.0/mod-mono-server4.exe",
     require => Exec['install_mod_mono'],
   }
-
 }
